@@ -32,7 +32,13 @@ python managy.py startapp users -> Must do this from the beginning, when there i
 
 # migration: sync database structure with model structure in python code (models.py)
 
-# VScode extensin
+# Django ORM 
+https://docs.djangoproject.com/en/5.1/ref/models/instances/
+https://docs.djangoproject.com/en/5.1/topics/db/queries/ 
+python manage.py shell
+connect to the database
+
+# VScode extension
 
 - SQLite viewr
 - Black fomatter
