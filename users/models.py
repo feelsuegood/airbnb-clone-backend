@@ -9,11 +9,11 @@ class User(AbstractUser):
         FEMALE = ("female", "Female")
 
     class LanguageChoices(models.TextChoices):
-        KR = ("kr", "Korean")  # value (database), label (admin panel)
+        KR = ("kr", "Korea")
         EN = ("en", "English")
 
     class CurrencyChoices(models.TextChoices):
-        WON = "won", "Korean Won"
+        WON = "won", "KRW"
         USD = "usd", "Dollar"
 
     first_name = models.CharField(
