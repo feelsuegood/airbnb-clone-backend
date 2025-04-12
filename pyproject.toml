@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "airbnb-clone"
+name = "airbnb-clone-backend"
 version = "0.1.0"
 description = ""
 authors = ["Sue <sue.jeong5@gmail.com>"]
@@ -11,7 +11,11 @@ python = "^3.12"
 django = "^5.0.4"
 pillow = "^10.3.0"
 django-cors-headers = "^4.7.0"
+djangorestframework = "^3.16.0"
 
+
+[tool.poetry.group.dev.dependencies]
+black = {version = "^25.1.0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core"]
