@@ -17,6 +17,9 @@ djangorestframework = "^3.16.0"
 [tool.poetry.group.dev.dependencies]
 black = {version = "^25.1.0", allow-prereleases = true}
 
+[tool.poetry.config]
+virtualenvs.in-project = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
