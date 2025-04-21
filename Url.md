@@ -18,20 +18,21 @@ PUT ✅ /wishlists/1/rooms/2
 
 ### Users
 
-GET PUT /me  
-POST /users  
-GET users/username
-POST /users/log-in  
-POST /users/change-password
+GET ✅ PUT ✅ /users/me  
+POST ✅ /users  
+GET ✅ /users/username
+POST ✅ /users/log-in  
+POST ✅ /users/log-out  
+POST ✅ /users/change-password
 
 ### Experiences
 
 GET[ ] POST[ ] /experiences  
 GET[ ] PUT[ ] DELETE[ ] /experiences/1  
-GET[ ] experiences/1/amenities  
+GET[ ] experiences/1/perks  
 GET[ ] POST[ ] experiences/1/reviews  
-GET[ ] POST[ ] /amenities  
-GET[ ] PUT[ ] DELETE[ ] /amenities/1  
+GET[ ] POST[ ] /perks  
+GET[ ] PUT[ ] DELETE[ ] /perks/1  
 POST[ ] /experiences/1/photos  
 DELETE[ ] /experiences/1/photos/1  
 GET[ ] POST[ ] /experiences/1/bookings

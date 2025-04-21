@@ -1,6 +1,13 @@
 from django.urls import path
-from .views import Me
+from . import views
 
 urlpatterns = [
-    path("me", Me.as_view()),
+    path("", views.PrivateUser.as_view()),
+    # "me" should be upper than <str:username>
+    # if not, me considered as username
+    path("me", views.Me.as_view()),
+    path("change-password", views.ChangePassword.as_view()),
+    path("log-in", views.LogIn.as_view()),
+    path("log-out", views.LogOut.as_view()),
+    path("@<str:username>", views.PublicUser.as_view()),
 ]

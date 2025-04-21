@@ -9,11 +9,11 @@ class User(AbstractUser):
         FEMALE = ("female", "Female")
 
     class LanguageChoices(models.TextChoices):
-        KR = ("kr", "Korea")
+        KR = ("kr", "Korean")
         EN = ("en", "English")
 
     class CurrencyChoices(models.TextChoices):
-        WON = "won", "KRW"
+        KRW = "won", "KRW"
         USD = "usd", "Dollar"
 
     first_name = models.CharField(
@@ -24,7 +24,7 @@ class User(AbstractUser):
         max_length=150,
         editable=False,
     )
-    avatar = models.ImageField(
+    avatar = models.URLField(
         blank=True,
     )
     name = models.CharField(
