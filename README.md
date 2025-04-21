@@ -14,9 +14,10 @@ A Django-based backend for an Airbnb clone project, built with Python 3.12 and D
 1. Initialize Poetry and install dependencies
 
 ```bash
-poetry config virtualenvs.in-project true
+poetry config virtualenvs.in-project true --local
 poetry install
-poetry shell
+poetry shell (only the first time)
+source .venv/bin/activate (every time)
 ```
 
 If you want to set up an interpreter in poetry, you can type command:
