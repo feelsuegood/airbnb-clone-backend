@@ -1,3 +1,4 @@
+from config import settings
 from rest_framework import serializers
 from .models import Room, Amenity
 from users.serializers import TinyUserSerializer
@@ -20,10 +21,11 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     owner = TinyUserSerializer(
         read_only=True,
     )
-    amenities = AmenitySerializer(
-        read_only=True,
-        many=True,
-    )
+    # separated to rooms/1/amenities
+    # amenities = AmenitySerializer(
+    #     read_only=True,
+    #     many=True,
+    # )
     category = CategorySerializer(
         read_only=True,
     )
@@ -38,7 +40,8 @@ class RoomDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ("amenities",)
         depth = 1
 
     def get_rating(self, room):
