@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from common.models import CommonModel
 
@@ -54,6 +55,12 @@ class Experience(CommonModel):
             for review in experience.reviews.all().values("rating"):
                 total_rating += review["rating"]
             return round(total_rating / count, 2)
+
+    def duration(experience):
+        today = timezone.localdate()
+        start_dt = timezone.datetime.combine(today, experience.start)
+        end_dt = timezone.datetime.combine(today, experience.end)
+        return end_dt - start_dt
 
 
 class Perk(CommonModel):

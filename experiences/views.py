@@ -303,7 +303,10 @@ class ExperienceBookings(APIView):
 
     def post(self, request, pk):
         experience = self.get_object(pk)
-        serializer = CreateExperienceBookingSerializer(data=request.data)
+        serializer = CreateExperienceBookingSerializer(
+            data=request.data,
+            context={"experience": experience},
+        )
         if serializer.is_valid():
             booking = serializer.save(
                 experience=experience,
@@ -332,16 +335,19 @@ class ExperienceBookingDetail(APIView):
             raise NotFound
 
     def get(self, request, pk, booking_pk):
+        experience = self.get_experience(pk)
         booking = self.get_booking(booking_pk)
-        serializer = PublicBookingSerializer(booking)
+        serializer = PublicBookingSerializer()
         return Response(serializer.data)
 
     def put(self, request, pk, booking_pk):
+        experience = self.get_experience(pk)
         booking = self.get_booking(booking_pk)
-        serializer = PublicBookingSerializer(
+        serializer = CreateExperienceBookingSerializer(
             booking,
             data=request.data,
             partial=True,
+            context={"experience": experience},
         )
         if serializer.is_valid():
             booking = serializer.save()
@@ -351,7 +357,7 @@ class ExperienceBookingDetail(APIView):
             return Response(serializer.errors)
 
     def delete(self, request, pk, booking_pk):
-        booking = Booking.objects.get(pk=booking_pk)
+        booking = self.get_booking(booking_pk)
         if booking.user != request.user:
             raise PermissionDenied
         booking.delete()

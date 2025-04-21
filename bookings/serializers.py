@@ -1,12 +1,14 @@
-from xml.dom import ValidationErr
+from datetime import datetime
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Booking
+from experiences.models import Experience
 
 
 class CreateExperienceBookingSerializer(serializers.ModelSerializer):
+    # start - end = duration
+    # for duration, it can be used when user try to book other experience in overlapped time with a booked experience
 
-    # required by default
     experience_time = serializers.DateTimeField()
 
     class Meta:
@@ -21,8 +23,11 @@ class CreateExperienceBookingSerializer(serializers.ModelSerializer):
         now = timezone.localtime(timezone.now())
         if now > value:
             raise serializers.ValidationError("Can't book in the past")
-        else:
-            return value
+        if value.time() != self.context["experience"].start:
+            raise serializers.ValidationError(
+                "The booking start time must be the same as experience start time"
+            )
+        return timezone.localtime(value)
 
     def validate_guests(self, value):
         max = 5
@@ -79,6 +84,7 @@ class CreateRoomBookingSerializer(serializers.ModelSerializer):
 
 # display data
 class PublicBookingSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Booking
         fields = (
