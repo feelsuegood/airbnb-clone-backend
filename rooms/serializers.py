@@ -29,14 +29,14 @@ class RoomDetailSerializer(ModelSerializer):
     category = CategorySerializer(
         read_only=True,
     )
-
-    rating = SerializerMethodField()
-    is_owner = SerializerMethodField()
-    is_liked = SerializerMethodField()
     photos = PhotoSerializer(
         many=True,
         read_only=True,
     )
+    total_amenities = SerializerMethodField()
+    rating = SerializerMethodField()
+    is_owner = SerializerMethodField()
+    is_liked = SerializerMethodField()
     # ! could kill the database because it loads too many data at once
     # reviews = ReviewSerializer(
     #     many=True,
@@ -45,9 +45,11 @@ class RoomDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Room
-        # fields = "__all__"
         exclude = ("amenities",)
         depth = 1
+
+    def get_total_amenities(self, room):
+        return room.total_amenities()
 
     def get_rating(self, room):
         return room.rating()
@@ -80,6 +82,7 @@ class RoomListSerializer(ModelSerializer):
 
     rating = SerializerMethodField()
     is_owner = SerializerMethodField()
+    total_amenities = SerializerMethodField()
     photos = PhotoSerializer(
         many=True,
         read_only=True,
@@ -96,6 +99,7 @@ class RoomListSerializer(ModelSerializer):
             "rating",
             "is_owner",
             "photos",
+            "total_amenities",
         )
 
     def get_rating(self, room):
@@ -104,3 +108,6 @@ class RoomListSerializer(ModelSerializer):
     def get_is_owner(self, room):
         request = self.context["request"]
         return room.owner == request.user
+
+    def get_total_amenities(self, room):
+        return room.total_amenities()

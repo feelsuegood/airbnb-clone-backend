@@ -4,6 +4,34 @@ from rest_framework import serializers
 from .models import Booking
 
 
+class CreateExperienceBookingSerializer(serializers.ModelSerializer):
+
+    # required by default
+    experience_time = serializers.DateTimeField()
+
+    class Meta:
+        model = Booking
+        fields = (
+            "experience_time",
+            "guests",
+        )
+
+    # it's okay there are several groups in experiences
+    def validate_experience_time(self, value):
+        now = timezone.localtime(timezone.now())
+        if now > value:
+            raise serializers.ValidationError("Can't book in the past")
+        else:
+            return value
+
+    def validate_guests(self, value):
+        max = 5
+        if max < value:
+            raise serializers.ValidationError("This exceeds the maximum guest limit")
+        else:
+            return value
+
+
 # create data
 class CreateRoomBookingSerializer(serializers.ModelSerializer):
 

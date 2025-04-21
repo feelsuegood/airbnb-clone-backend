@@ -5,7 +5,7 @@ from common.models import CommonModel
 class Category(CommonModel):
     """Room or Experience Categories"""
 
-    class CategoryKindCoices(models.TextChoices):
+    class CategoryKindChoices(models.TextChoices):
         ROOMS = "rooms", "Rooms"
 
         EXPERIENCES = "experiences", "Experiences"
@@ -15,7 +15,7 @@ class Category(CommonModel):
     )
     kind = models.CharField(
         max_length=15,
-        choices=CategoryKindCoices.choices,
+        choices=CategoryKindChoices.choices,
     )
 
     def __str__(self) -> str:

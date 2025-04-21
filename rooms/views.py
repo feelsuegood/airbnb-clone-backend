@@ -97,7 +97,7 @@ class Rooms(APIView):
                 raise ParseError("Category is required.")
             try:
                 category = Category.objects.get(pk=category_pk)
-                if category.kind == Category.CategoryKindCoices.EXPERIENCES:
+                if category.kind == Category.CategoryKindChoices.EXPERIENCES:
                     raise ParseError("The category kind should be 'rooms'.")
             except Category.DoesNotExist:
                 raise ParseError("Category not found.")
@@ -154,9 +154,9 @@ class RoomDetail(APIView):
             if request.data.get("category"):
                 try:
                     category_pk = request.data.get("category")
-                    print(category_pk)
+                    # print(category_pk)
                     category = Category.objects.get(pk=category_pk)
-                    if category.kind == Category.CategoryKindCoices.EXPERIENCES:
+                    if category.kind == Category.CategoryKindChoices.EXPERIENCES:
                         raise ParseError("The category kind should be 'rooms'.")
                 except Category.DoesNotExist:
                     raise ParseError("Category Not Found")
@@ -217,7 +217,7 @@ class RoomReviews(APIView):
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
             review = serializer.save(user=request.user, room=self.get_object(pk))
-            review = ReviewSerializer(review)
+            serializer = ReviewSerializer(review)
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
