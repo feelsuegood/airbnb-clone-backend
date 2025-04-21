@@ -1,13 +1,12 @@
-from config import settings
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Room, Amenity
 from users.serializers import TinyUserSerializer
 from categories.serializers import CategorySerializer
-from reviews.serializers import ReviewSerializer
 from medias.serializers import PhotoSerializer
+from wishlists.models import Wishlist
 
 
-class AmenitySerializer(serializers.ModelSerializer):
+class AmenitySerializer(ModelSerializer):
     class Meta:
         model = Amenity
         fields = (
@@ -17,7 +16,7 @@ class AmenitySerializer(serializers.ModelSerializer):
         )
 
 
-class RoomDetailSerializer(serializers.ModelSerializer):
+class RoomDetailSerializer(ModelSerializer):
 
     owner = TinyUserSerializer(
         read_only=True,
@@ -31,8 +30,9 @@ class RoomDetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    rating = serializers.SerializerMethodField()
-    is_owner = serializers.SerializerMethodField()
+    rating = SerializerMethodField()
+    is_owner = SerializerMethodField()
+    is_liked = SerializerMethodField()
     photos = PhotoSerializer(
         many=True,
         read_only=True,
@@ -50,12 +50,21 @@ class RoomDetailSerializer(serializers.ModelSerializer):
         depth = 1
 
     def get_rating(self, room):
-        print(self.context)
         return room.rating()
 
     def get_is_owner(self, room):
         request = self.context["request"]
         return room.owner == request.user
+
+    def get_is_liked(self, room):
+        request = self.context["request"]
+        # * many to many field: filter wishlists created by current user and current room
+        # https://docs.djangoproject.com/en/5.2/topics/db/examples/many_to_many/
+        # "rooms" not room
+        return Wishlist.objects.filter(
+            user=request.user,
+            rooms__pk=room.pk,
+        ).exists()
 
     # * create function automatically called when serializer.save() is called in BTS
     # def create(self, validated_data):
@@ -67,10 +76,10 @@ class RoomDetailSerializer(serializers.ModelSerializer):
     #     return
 
 
-class RoomListSerializer(serializers.ModelSerializer):
+class RoomListSerializer(ModelSerializer):
 
-    rating = serializers.SerializerMethodField()
-    is_owner = serializers.SerializerMethodField()
+    rating = SerializerMethodField()
+    is_owner = SerializerMethodField()
     photos = PhotoSerializer(
         many=True,
         read_only=True,
