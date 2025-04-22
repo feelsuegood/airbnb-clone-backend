@@ -11,16 +11,22 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# environ.Env.read_env(f"{BASE_DIR}/.env") <- can make a typo mistake
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^n$2zs))-b)#dac+#@zs#6%a@xnhs=g2*(oa26f!7=dbx#$hs0"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,6 +38,7 @@ ALLOWED_HOSTS = []
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "strawberry.django",
     "corsheaders",
 ]
@@ -156,3 +163,15 @@ MEDIA_ROOT = "uploads"
 MEDIA_URL = "user-uploads/"
 
 PAGE_SIZE = 3
+
+# * other third party authentication packages (django-rest-knox (token), Simple JWT)
+# https://www.django-rest-framework.org/api-guide/authentication/#third-party-packages
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "config.authentication.TrustMeMateAuthentication",
+        "rest_framework.authentication.TokenAuthentication",  # saved in database, force logout available
+        "config.authentication.JWTAuthentication",  # not saved in database, can't force logout
+    ]
+}

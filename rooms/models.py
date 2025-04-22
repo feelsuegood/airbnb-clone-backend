@@ -7,8 +7,8 @@ class Room(CommonModel):
 
     class RoomKindChoices(models.TextChoices):
         ENTIRE_PLACE = ("entire_place", "Entire Place")
-        PRIVAE_ROOM = ("private_room", "Private Room")
-        SHARE_ROOM = ("share_room", "Share Room")
+        PRIVATE_ROOM = ("private_room", "Private Room")
+        SHARED_ROOM = ("shared_room", "Shared Room")
 
     name = models.CharField(
         max_length=180,
@@ -65,13 +65,13 @@ class Room(CommonModel):
         return (room).amenities.count()
 
     def rating(room):
-        count = room.reviews.count()
+        count = room.reviews.count()  # type: ignore # revers accessor (related_name)
         if count == 0:
             return 0
         else:
             total_rating = 0
             # room.review.all() -> review.rating
-            for review in room.reviews.all().values("rating"):
+            for review in room.reviews.all().values("rating"):  # type: ignore
                 total_rating += review["rating"]
             return round(total_rating / count, 2)
 
