@@ -63,10 +63,13 @@ class RoomDetailSerializer(ModelSerializer):
         # * many to many field: filter wishlists created by current user and current room
         # https://docs.djangoproject.com/en/5.2/topics/db/examples/many_to_many/
         # "rooms" not room
-        return Wishlist.objects.filter(
-            user=request.user,
-            rooms__pk=room.pk,
-        ).exists()
+        if request.user.is_authenticated:
+            return Wishlist.objects.filter(
+                user=request.user,
+                rooms__pk=room.pk,
+            ).exists()
+        else:
+            return False
 
     # * create function automatically called when serializer.save() is called in BTS
     # def create(self, validated_data):
