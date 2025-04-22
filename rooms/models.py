@@ -43,7 +43,6 @@ class Room(CommonModel):
     )
     amenities = models.ManyToManyField(
         "rooms.Amenity",
-        null=True,
         blank=True,
         related_name="rooms",
     )
