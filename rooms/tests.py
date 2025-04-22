@@ -6,6 +6,7 @@ class TestAmenities(APITestCase):
 
     NAME = "Amenity test"
     DESC = "Amenity des"
+    URL = "/api/v1/rooms/amenities/"
 
     def setUp(self):
         models.Amenity.objects.create(
@@ -15,7 +16,7 @@ class TestAmenities(APITestCase):
 
     def test_all_amenities(self):
 
-        response = self.client.get("/api/v1/rooms/amenities/")
+        response = self.client.get(self.URL)
         data = response.json()
 
         self.assertEqual(
@@ -39,3 +40,72 @@ class TestAmenities(APITestCase):
             data[0]["description"],
             self.DESC,
         )
+
+    def test_create_amenity(self):
+
+        new_amenity_name = "New Amenity"
+        new_amenity_desc = "New Amenity Des"
+
+        response = self.client.post(
+            self.URL,
+            data={
+                "name": new_amenity_name,
+                "description": new_amenity_desc,
+            },
+        )
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            "Status code is not 200",
+        )
+        self.assertEqual(
+            data["name"],
+            new_amenity_name,
+            f"name is not '{new_amenity_name}'",
+        )
+        self.assertEqual(
+            data["description"],
+            new_amenity_desc,
+            f"name is not '{new_amenity_desc}'",
+        )
+
+        response = self.client.post(self.URL)
+        data = response.json()
+
+        self.assertEqual(response.status_code, 400, "No Status Code 400")
+        self.assertIn("name", data)
+
+
+class TestAmenity(APITestCase):
+    NAME = "Amenity test"
+    DESC = "Amenity des"
+    URL = "/api/v1/rooms/amenities/1"
+    EMPTY_URL = "/api/v1/rooms/amenities/2"
+
+    def setUp(self):
+        models.Amenity.objects.create(
+            name=self.NAME,
+            description=self.DESC,
+        )
+
+    def test_amenity_not_count(self):
+        response = self.client.get(self.EMPTY_URL)
+        self.assertEqual(response.status_code, 404, "No status code 404")
+
+    def test_get_amenity(self):
+        response = self.client.get(self.URL)
+        self.assertEqual(response.status_code, 200, "No status code 200")
+
+        data = response.json()
+        self.assertEqual(data["name"], self.NAME, "name is not valid")
+        self.assertEqual(data["description"], self.DESC, "description is not valid")
+
+    # code challenge
+    def test_put_amenity(self):
+        pass
+
+    def test_delete_amenity(self):
+        response = self.client.delete(self.URL)
+        self.assertEqual(response.status_code, 204, "No status code 204")
