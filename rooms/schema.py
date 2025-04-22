@@ -1,15 +1,15 @@
 import strawberry
 import typing
-
 import strawberry.django
 from . import types
 from . import queries
+from common.permissions import OnlyLoggedIn
 
 
 @strawberry.type
 class Query:
     all_rooms: typing.List[types.RoomType] = strawberry.field(
-        resolver=queries.get_all_rooms
+        resolver=queries.get_all_rooms, permission_classes=[OnlyLoggedIn]
     )
     # nullable
     room: typing.Optional[types.RoomType] = strawberry.field(resolver=queries.get_room)
