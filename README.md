@@ -16,7 +16,7 @@ A Django-based backend for an Airbnb clone project, built with Python 3.12 and D
 ```bash
 poetry config virtualenvs.in-project true --local
 poetry install
-poetry shell (only the first time)
+poetry shell
 ```
 
 2. Create Django project
