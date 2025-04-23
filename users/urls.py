@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
+# /api/v1/users/
 urlpatterns = [
     path("", views.PrivateUser.as_view()),
     # "me" should be upper than <str:username>
@@ -13,5 +14,6 @@ urlpatterns = [
     path("token-login", obtain_auth_token),  # using auth tokens
     path("jwt-login", views.JWTLogIn.as_view()),  # using jwt
     path("github", views.GithubLogIn.as_view()),
+    path("kakao", views.KakaoLogIn.as_view()),
     path("@<str:username>", views.PublicUser.as_view()),
 ]

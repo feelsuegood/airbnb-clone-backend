@@ -31,6 +31,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 GH_ID = env("GH_ID")
 GH_SECRET = env("GH_SECRET")
+KAKAO_ID = env("KAKAO_ID")
+KAKAO_URI = env("KAKAO_URI")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

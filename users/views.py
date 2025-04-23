@@ -1,3 +1,4 @@
+import re
 from os import access
 import jwt
 import requests
@@ -151,17 +152,17 @@ class GithubLogIn(APIView):
             user_emails = user_emails.json()
             # [x] print(user_emails)
             # [ ]check email is verified
-            # verified_user_emails = [
-            #     email for email in user_emails if email.get("verified", True)
-            # ]
-            # if len(verified_user_emails) == 0:
-            #     raise ParseError("No verified email found")
+            verified_user_emails = [
+                email for email in user_emails if email.get("verified", True)
+            ]
+            if len(verified_user_emails) == 0:
+                raise ParseError("No verified email found")
             try:
                 user = User.objects.get(email=user_emails[0]["email"])
                 login(request, user)
                 return Response(status=status.HTTP_200_OK)
             except User.DoesNotExist:
-                # * check if name exists
+                # * check if name exists, other option: raise ParseError
                 checked_name = user_data.get("name")
                 if checked_name == None:
                     checked_name = "Add your name"
@@ -170,6 +171,57 @@ class GithubLogIn(APIView):
                     email=user_emails[0].get("email"),
                     name=checked_name,
                     avatar=user_data.get("avatar_url"),
+                )
+                # no need password because this user only log in through github
+                # can use '.has_usable_password' to check
+                user.set_unusable_password()
+                user.save()
+                login(request, user)
+                return Response(status=status.HTTP_200_OK)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class KakaoLogIn(APIView):
+    def post(self, request):
+        try:
+            code = request.data.get("code")
+            access_token = requests.post(
+                f"https://kauth.kakao.com/oauth/token",
+                headers={
+                    "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+                },
+                data={
+                    "grant_type": "authorization_code",
+                    "client_id": settings.KAKAO_ID,
+                    "redirect_uri": settings.KAKAO_URI,
+                    "code": code,
+                },
+            )
+            access_token = access_token.json().get("access_token")
+            user_data = requests.get(
+                "https://kapi.kakao.com/v2/user/me",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            user_data = user_data.json()
+            # set id as username because nickname is not unique
+            username = f"kakao_{user_data.get("id")}"
+            kakao_account = user_data.get("kakao_account")
+            profile = kakao_account.get("profile")
+            try:
+                user = User.objects.get(username=username)
+                login(request, user)
+                return Response(status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                # email is not available for this login but just add checking code for practice
+                checked_email = profile.get("email")
+                if checked_email == None:
+                    checked_email = "Add@your.email"
+                user = User.objects.create(
+                    username=username,
+                    email=checked_email,
+                    name=profile.get("nickname"),
+                    avatar=profile.get("profile_image_url"),
                 )
                 # no need password because this user only log in through github
                 # can use '.has_usable_password' to check
