@@ -29,6 +29,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # create a new secret key
 # python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 SECRET_KEY = env("SECRET_KEY")
+GH_ID = env("GH_ID")
+GH_SECRET = env("GH_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

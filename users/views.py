@@ -1,4 +1,6 @@
+from os import access
 import jwt
+import requests
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -41,8 +43,8 @@ class PrivateUser(APIView):
         serializer = serializers.PrivateUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            user.set_password(password)
-            user.save()
+            user.set_password(password)  # type: ignore
+            user.save()  # type: ignore
             serializer = serializers.PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
@@ -125,3 +127,55 @@ class JWTLogIn(APIView):
             return Response({"token": token})
         else:
             return Response({"error": "Wrong username or password"})
+
+
+class GithubLogIn(APIView):
+    def post(self, request):
+        try:
+            code = request.data.get("code")
+            access_token = requests.post(
+                f"https://github.com/login/oauth/access_token?code={code}&client_id={settings.GH_ID}&client_secret={settings.GH_SECRET}",
+                headers={"Accept": "application/json"},
+            )
+            access_token = access_token.json().get("access_token")
+            user_data = requests.get(
+                "https://api.github.com/user",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            user_data = user_data.json()
+            # [x] print(user_data)
+            user_emails = requests.get(
+                "https://api.github.com/user/emails",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            user_emails = user_emails.json()
+            # [x] print(user_emails)
+            # [ ]check email is verified
+            # verified_user_emails = [
+            #     email for email in user_emails if email.get("verified", True)
+            # ]
+            # if len(verified_user_emails) == 0:
+            #     raise ParseError("No verified email found")
+            try:
+                user = User.objects.get(email=user_emails[0]["email"])
+                login(request, user)
+                return Response(status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                # * check if name exists
+                checked_name = user_data.get("name")
+                if checked_name == None:
+                    checked_name = "Add your name"
+                user = User.objects.create(
+                    username=user_data.get("login"),
+                    email=user_emails[0].get("email"),
+                    name=checked_name,
+                    avatar=user_data.get("avatar_url"),
+                )
+                # no need password because this user only log in through github
+                # can use '.has_usable_password' to check
+                user.set_unusable_password()
+                user.save()
+                login(request, user)
+                return Response(status=status.HTTP_200_OK)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
