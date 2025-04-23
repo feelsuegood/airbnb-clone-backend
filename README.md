@@ -1,4 +1,4 @@
-# Suenugbnb - Airbnb Clone Backend
+# Sueweetbnb - Airbnb Clone Backend
 
 A Django-based backend for an Airbnb clone project, built with Python 3.12 and Django 5.0.4.
 
@@ -17,13 +17,6 @@ A Django-based backend for an Airbnb clone project, built with Python 3.12 and D
 poetry config virtualenvs.in-project true --local
 poetry install
 poetry shell (only the first time)
-source .venv/bin/activate (every time)
-```
-
-If you want to set up an interpreter in poetry, you can type command:
-
-```bash
-poetry env use python
 ```
 
 2. Create Django project
@@ -32,14 +25,7 @@ poetry env use python
 django-admin startproject config .
 ```
 
-3. Set up development environment
-
-- Create .gitignore file for Python projects
-- Install VSCode extensions:
-  - SQLite viewer
-  - Black formatter
-
-4. Initialize database
+3. Initialize database
 
 ```bash
 python manage.py migrate
@@ -58,27 +44,6 @@ python manage.py createsuperuser
 - `medias/` - Media file handling
 - `common/` - Shared utilities and configurations
 
-## 🔧 Development
-
-### Creating New Apps
-
-```bash
-python manage.py startapp [app_name]
-```
-
-### Database Migrations
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### Running the Server
-
-```bash
-python manage.py runserver
-```
-
 ## ⚠️ Important Notes
 
 - Custom user model must be implemented at the beginning of the project
@@ -92,13 +57,6 @@ python manage.py runserver
 - [Django Documentation](https://docs.djangoproject.com/en/5.0/)
 - [Django ORM Documentation](https://docs.djangoproject.com/en/5.1/ref/models/instances/)
 - [Django Queries Documentation](https://docs.djangoproject.com/en/5.1/topics/db/queries/)
-
-## 🛠️ Tech Stack
-
-- Python 3.12
-- Django 5.0.4
-- Pillow 10.3.0 (Image processing)
-- Poetry (Dependency management)
 
 ## 🙏 Acknowledgments
 
