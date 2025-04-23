@@ -1,3 +1,4 @@
+import time  # for frontend test
 from config import settings
 from django.db import transaction
 from django.utils import timezone
@@ -142,6 +143,8 @@ class RoomDetail(APIView):
             raise NotFound
 
     def get(self, request, pk):
+        # for frontend test
+        # time.sleep(2)
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(
             room,
