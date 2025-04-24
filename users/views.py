@@ -163,17 +163,21 @@ class GithubLogIn(APIView):
             )
             print(access_token)
             user_data = user_data.json()
-            # [x] print(user_data)
+            # [ ] print(user_data)
+            print(user_data)
             user_emails = requests.get(
                 "https://api.github.com/user/emails",
                 headers={"Authorization": f"Bearer {access_token}"},
             )
             user_emails = user_emails.json()
-            # [x] print(user_emails)
-            # [ ]check email is verified
+            # [ ] print(user_emails)
+            print(user_emails)
+            # [x]check email is verified
             verified_user_emails = [
                 email for email in user_emails if email.get("verified", True)
             ]
+            # [ ] print(verified_user_emails)
+            print(verified_user_emails)
             if len(verified_user_emails) == 0:
                 raise ParseError("No verified email found")
             try:
@@ -183,6 +187,7 @@ class GithubLogIn(APIView):
             except User.DoesNotExist:
                 # * check if name exists, other option: raise ParseError
                 checked_name = user_data.get("name")
+                print(checked_name)
                 if checked_name == None:
                     checked_name = "Add your name"
                 user = User.objects.create(
@@ -195,6 +200,7 @@ class GithubLogIn(APIView):
                 # can use '.has_usable_password' to check
                 user.set_unusable_password()
                 user.save()
+                print(user.username)
                 login(request, user)
                 return Response(status=status.HTTP_200_OK)
         except Exception:
