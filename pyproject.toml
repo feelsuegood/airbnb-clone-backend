@@ -21,6 +21,7 @@ psycopg2-binary = "^2.9.10"
 whitenoise = {extras = ["brotli"], version = "^6.9.0"}
 gunicorn = "^23.0.0"
 uvicorn = "^0.34.2"
+sentry-sdk = {extras = ["django"], version = "^2.26.1"}
 
 [tool.poetry.group.dev.dependencies]
 black = {version = "^25.1.0", allow-prereleases = true}

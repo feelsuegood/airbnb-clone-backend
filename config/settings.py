@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import environ
 import dj_database_url
+import sentry_sdk
+
 
 env = environ.Env()
 
@@ -209,3 +211,11 @@ REST_FRAMEWORK = {
         "config.authentication.JWTAuthentication",  # not saved in database, can't force logout
     ]
 }
+
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://3a0dc68bb6472ce4e54a7c4afe0bf3a9@o4509206079864832.ingest.de.sentry.io/4509206091006032",
+        # Add data like request headers and IP for users,
+        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        send_default_pii=True,
+    )

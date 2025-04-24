@@ -10,4 +10,5 @@ urlpatterns = [
     path("<int:pk>/bookings", views.RoomBookings.as_view()),
     path("amenities/", views.Amenities.as_view()),
     path("amenities/<int:pk>", views.AmenityDetail.as_view()),
+    path("error-test/", views.trigger_error),
 ]
