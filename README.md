@@ -1,4 +1,4 @@
-# 🍬 Sueweetbnb - Airbnb Clone Backend
+# 🍭 Sueweetbnb - Airbnb Clone Backend
 
 A Django-based backend for an Airbnb clone project, built with Python 3.12 and Django 5.0.4.
 
