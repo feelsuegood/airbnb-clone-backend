@@ -40,7 +40,11 @@ KAKAO_URI = env("KAKAO_URI")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "RENDER" not in os.environ
 
-ALLOWED_HOSTS = ["backend.sueweetbnb.xyz"]
+ALLOWED_HOSTS = [
+    "backend.sueweetbnb.xyz",
+    "sueweetbnb.xyz",
+    "www.sueweetbnb.xyz",
+]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -80,10 +84,10 @@ SYSTEM_APPS = [
 INSTALLED_APPS = SYSTEM_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -186,8 +190,14 @@ if DEBUG:
     # allow post request from frontend
     CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
 else:
-    CORS_ALLOWED_ORIGINS = ["https://sueweetbnb.xyz"]
-    CSRF_TRUSTED_ORIGINS = ["https://sueweetbnb.xyz"]
+    CORS_ALLOWED_ORIGINS = [
+        "https://sueweetbnb.xyz",
+        "https://www.sueweetbnb.xyz",
+    ]
+    CSRF_TRUSTED_ORIGINS = [
+        "https://sueweetbnb.xyz",
+        "https://www.sueweetbnb.xyz",
+    ]
 
 # allow JS' cookies
 CORS_ALLOW_CREDENTIALS = True
