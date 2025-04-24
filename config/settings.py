@@ -213,6 +213,8 @@ REST_FRAMEWORK = {
 }
 
 if not DEBUG:
+    SESSION_COOKIE_DOMAIN = ".sueweetbnb.xyz"
+    CSRF_COOKIE_DOMAIN = ".sueweetbnb.xyz"
     sentry_sdk.init(
         dsn="https://3a0dc68bb6472ce4e54a7c4afe0bf3a9@o4509206079864832.ingest.de.sentry.io/4509206091006032",
         # Add data like request headers and IP for users,
