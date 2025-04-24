@@ -212,7 +212,7 @@ class KakaoLogIn(APIView):
                 data={
                     "grant_type": "authorization_code",
                     "client_id": settings.KAKAO_ID,
-                    "redirect_uri": settings.KAKAO_URI,
+                    "redirect_uri": "https://sueweetbnb.xyz/social/kakao",
                     "code": code,
                 },
             )
