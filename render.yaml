@@ -1,0 +1,22 @@
+databases:
+  - name: sueweetbebdb
+    plan: free
+    databaseName: sueweetbnb
+    user: sueweetbnb
+
+services:
+  - type: web
+    plan: free
+    name: sueweetbnb
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn sueweetbnb.asgi:application -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sueweetbebdb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
