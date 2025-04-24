@@ -1,5 +1,3 @@
-import re
-from os import access
 import jwt
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -80,6 +78,26 @@ class ChangePassword(APIView):
             return Response(status=status.HTTP_200_OK)
         else:
             raise ParseError
+
+
+class SignUp(APIView):
+    def post(self, request):
+        serialzer = serializers.SignUpSerializer(data=request.data)
+        if serialzer.is_valid():
+            user = User.objects.create(
+                username=request.data["username"],
+                name=request.data["name"],
+                email=request.data["email"],
+            )
+            user.set_password(raw_password=request.data["password"])
+            user.save()
+            login(request, user)
+            return Response({"ok": "success"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                serialzer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class LogIn(APIView):
