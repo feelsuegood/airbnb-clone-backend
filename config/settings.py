@@ -180,18 +180,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
 
-# allow JS to fetch
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-]
+if DEBUG:
+    # allow JS to fetch
+    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3000"]
+    # allow post request from frontend
+    CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
+else:
+    CORS_ALLOWED_ORIGINS = ["https://sueweetbnb-frontend.onrender.com"]
+    CSRF_TRUSTED_ORIGINS = ["https://sueweetbnb-frontend.onrender.com"]
 
 # allow JS' cookies
 CORS_ALLOW_CREDENTIALS = True
 
-# allow post request from frontend
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:3000",
-]
 
 MEDIA_ROOT = "uploads"
 
