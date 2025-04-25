@@ -55,19 +55,23 @@ class RoomDetailSerializer(ModelSerializer):
         return room.rating()
 
     def get_is_owner(self, room):
-        request = self.context["request"]
-        return room.owner == request.user
+        request = self.context.get("request")
+        if request:
+            return room.owner == request.user
+        else:
+            return False
 
     def get_is_liked(self, room):
-        request = self.context["request"]
-        # * many to many field: filter wishlists created by current user and current room
-        # https://docs.djangoproject.com/en/5.2/topics/db/examples/many_to_many/
-        # "rooms" not room
-        if request.user.is_authenticated:
-            return Wishlist.objects.filter(
-                user=request.user,
-                rooms__pk=room.pk,
-            ).exists()
+        request = self.context.get("request")
+        if request:
+            # * many to many field: filter wishlists created by current user and current room
+            # https://docs.djangoproject.com/en/5.2/topics/db/examples/many_to_many/
+            # "rooms" not room
+            if request.user.is_authenticated:
+                return Wishlist.objects.filter(
+                    user=request.user,
+                    rooms__pk=room.pk,
+                ).exists()
         else:
             return False
 

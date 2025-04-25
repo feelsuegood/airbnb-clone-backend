@@ -1,7 +1,7 @@
 import time  # for frontend test
-from config import settings
 from django.db import transaction
 from django.utils import timezone
+from django.http import HttpRequest, HttpResponse
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -12,6 +12,7 @@ from rest_framework.exceptions import (
     ValidationError,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from config import settings
 from .models import Room, Amenity
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 from categories.models import Category
@@ -97,7 +98,10 @@ class Rooms(APIView):
 
     def post(self, request):
 
-        serializer = RoomDetailSerializer(data=request.data)
+        serializer = RoomDetailSerializer(
+            data=request.data,
+            context={"request": request},
+        )
         if serializer.is_valid():
             category_pk = request.data.get("category")
             if not category_pk:
@@ -121,6 +125,7 @@ class Rooms(APIView):
                     for amenity_pk in amenities:
                         amenity = Amenity.objects.get(pk=amenity_pk)
                         room.amenities.add(amenity)  # type: ignore
+
             except Exception:
                 raise ParseError("Amenity not found.")
 
@@ -333,5 +338,6 @@ class RoomBookings(APIView):
             )
 
 
-def trigger_error(request):
+def trigger_error(request: HttpRequest):
     division_by_zero = 1 / 0
+    return HttpResponse("This will never be returned")

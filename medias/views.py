@@ -1,8 +1,10 @@
+import requests
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.response import Response
+from config import settings
 from .models import Photo
 
 
@@ -25,3 +27,14 @@ class PhotoDetail(APIView):
         # experience = Experience.objects.get(pk=photo.experience)
         photo.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class GetUploadURL(APIView):
+    def post(self, request):
+        one_time_url = requests.post(
+            url=f"https://api.cloudflare.com/client/v4/accounts/{settings.CF_ID}/images/v2/direct_upload",
+            headers={"Authorization": f"Bearer {settings.CF_TOKEN}"},
+        )
+        one_time_url = one_time_url.json()
+        result = one_time_url.get("result")
+        return Response({"id": result.get("id"), "uploadURL": result.get("uploadURL")})

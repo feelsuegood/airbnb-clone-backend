@@ -35,16 +35,20 @@ SECRET_KEY = env("SECRET_KEY")
 GH_ID = env("GH_ID")
 GH_SECRET = env("GH_SECRET")
 KAKAO_ID = env("KAKAO_ID")
-KAKAO_URI = env("KAKAO_URI")
+CF_TOKEN = env("CF_TOKEN")
+CF_ID = env("CF_ID")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "RENDER" not in os.environ
 
-ALLOWED_HOSTS = [
-    "backend.sueweetbnb.xyz",
-    "sueweetbnb.xyz",
-    "www.sueweetbnb.xyz",
-]
+if DEBUG:
+    ALLOWED_HOSTS = ["127.0.0.1"]
+else:
+    ALLOWED_HOSTS = [
+        "backend.sueweetbnb.xyz",
+        "sueweetbnb.xyz",
+        "www.sueweetbnb.xyz",
+    ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:

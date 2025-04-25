@@ -11,3 +11,15 @@ class CategoryViewSet(ModelViewSet):
 
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
+
+class CategoryRoomsViewSet(ModelViewSet):
+
+    serializer_class = CategorySerializer
+    queryset = Category.objects.filter(kind=Category.CategoryKindChoices.ROOMS)
+
+
+class CategoryExperiencesViewSet(ModelViewSet):
+
+    serializer_class = CategorySerializer
+    queryset = Category.objects.filter(kind=Category.CategoryKindChoices.EXPERIENCES)

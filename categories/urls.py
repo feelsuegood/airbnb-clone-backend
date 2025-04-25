@@ -1,4 +1,3 @@
-from venv import create
 from django.urls import path
 from . import views
 
@@ -19,6 +18,24 @@ urlpatterns = [
                 "get": "retrieve",
                 "put": "partial_update",
                 "delete": "destroy",
+            }
+        ),
+    ),
+    path(
+        "rooms",
+        views.CategoryRoomsViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            }
+        ),
+    ),
+    path(
+        "experiences",
+        views.CategoryExperiencesViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
             }
         ),
     ),
