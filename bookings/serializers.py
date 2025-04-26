@@ -67,12 +67,14 @@ class CreateRoomBookingSerializer(serializers.ModelSerializer):
             return value
 
     def validate(self, data):
+        room = self.context.get("room")
         if data["check_out"] <= data["check_in"]:
             raise serializers.ValidationError(
                 "Check-out date must be later than the check-in date."
             )
         # Can't cover overlapped parts -> check_in__gte=data["check_in"], check_out__lte=data["check_out"],
         if Booking.objects.filter(
+            room=room,
             check_in__lte=data["check_out"],
             check_out__gte=data["check_in"],
         ).exists():

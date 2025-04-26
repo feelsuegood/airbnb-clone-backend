@@ -1,3 +1,4 @@
+from genericpath import exists
 import time  # for frontend test
 from django.db import transaction
 from django.utils import timezone
@@ -346,6 +347,21 @@ class RoomBookingCheck(APIView):
             return Room.objects.get(pk=pk)
         except Room.DoesNotExist:
             raise NotFound
+
+    # bookings/check?check_in=date&check_out=date
+    def get(self, request, pk):
+        room = self.get_object(pk)
+        check_out = request.query_params.get("check_out")
+        check_out = request.query_params.get("check_in")
+        exists = Booking.objects.filter(
+            room=room,
+            check_in__lte=check_out,
+            check_out__gte=check_out,
+        ).exists()
+        if exists:
+            return Response({"ok": False})
+        else:
+            return Response({"ok": True})
 
 
 def trigger_error(request: HttpRequest):
