@@ -322,7 +322,9 @@ class RoomBookings(APIView):
 
     def post(self, request, pk):
         room = self.get_object(pk)
-        serializer = CreateRoomBookingSerializer(data=request.data)
+        serializer = CreateRoomBookingSerializer(
+            data=request.data, context={"room": room}
+        )
         if serializer.is_valid():
             booking = serializer.save(
                 kind=Booking.BookingKindChoices.ROOM,
@@ -336,6 +338,14 @@ class RoomBookings(APIView):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class RoomBookingCheck(APIView):
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
 
 
 def trigger_error(request: HttpRequest):

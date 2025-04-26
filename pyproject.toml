@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "sueweetbnb-backend"
+name = "sueweetstay-backend"
 version = "0.1.0"
 description = ""
 authors = ["Sue <sue.jeong5@gmail.com>"]

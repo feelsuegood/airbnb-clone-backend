@@ -45,9 +45,9 @@ if DEBUG:
     ALLOWED_HOSTS = ["127.0.0.1"]
 else:
     ALLOWED_HOSTS = [
-        "backend.sueweetbnb.xyz",
-        "sueweetbnb.xyz",
-        "www.sueweetbnb.xyz",
+        "backend.sueweetstay.com",
+        "sueweetstay.com",
+        "www.sueweetstay.com",
     ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
@@ -195,12 +195,12 @@ if DEBUG:
     CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000"]
 else:
     CORS_ALLOWED_ORIGINS = [
-        "https://sueweetbnb.xyz",
-        "https://www.sueweetbnb.xyz",
+        "https://sueweetstay.com",
+        "https://www.sueweetstay.com",
     ]
     CSRF_TRUSTED_ORIGINS = [
-        "https://sueweetbnb.xyz",
-        "https://www.sueweetbnb.xyz",
+        "https://sueweetstay.com",
+        "https://www.sueweetstay.com",
     ]
 
 # allow JS' cookies
@@ -227,8 +227,8 @@ REST_FRAMEWORK = {
 }
 
 if not DEBUG:
-    SESSION_COOKIE_DOMAIN = ".sueweetbnb.xyz"
-    CSRF_COOKIE_DOMAIN = ".sueweetbnb.xyz"
+    SESSION_COOKIE_DOMAIN = ".sueweetstay.com"
+    CSRF_COOKIE_DOMAIN = ".sueweetstay.com"
     sentry_sdk.init(
         dsn="https://3a0dc68bb6472ce4e54a7c4afe0bf3a9@o4509206079864832.ingest.de.sentry.io/4509206091006032",
         # Add data like request headers and IP for users,
